@@ -6,7 +6,7 @@ TOOLS_DIR="openstackclient-tools"
 CONFIG_DIR="$HOME/.config/openstackclient-container/"
 CONFIG_FILE="cloud-container.cfg"
 SCRIPTNAME="osclient-container-install.sh"
-SCRIPT_URL="https://raw.githubusercontent.com/chelios/openstackclient-container/master/osclient-container-install.sh"
+SCRIPT_URL="https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/osclient-container-install.sh"
 
 usage() {
   COMMAND=${0##*/}
