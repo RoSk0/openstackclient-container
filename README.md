@@ -1,5 +1,12 @@
 # The OpenStackClient container installer script
 
+## Just Give Me The Tools!
+If all you really care about is getting your hands on a working version of the container then simply run the following command from a Linux shell to have a copy installed locally.
+
+```bash
+  bash -c "$(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh)"
+```
+
 ## Overview
 To provide the OpenstackClient command line tools pre-installed, with all of it's dependencies, in a docker container.
 
@@ -99,11 +106,3 @@ The preferred method
 
 The alternative
 - create a directory called ${HOME}/.openrcplace a copy of your *-openrc.sh file in there. The container will detect this and prompt you for your cloud account's password.
-
-
-## Just Give Me The Tools!
-If all you really care about is getting your hands on a working version of the container then simply run the following command from a Linux shell to have a copy installed locally.
-
-```bash
-  bash -c "$(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh)"
-```
