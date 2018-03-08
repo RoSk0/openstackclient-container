@@ -12,20 +12,27 @@ usage() {
   COMMAND=${0##*/}
 
   echo "
-$COMMAND [ --disable-prompts ] [ --install-dir DIRECTORY ]
+$COMMAND [ --disable-prompts ] [ --install-dir DIRECTORY ] [ --alias ALIAS_NAME ] [ --url AUTH_URL]
 
 Installs the OpenStackClient container launcher by downloading the setup script
 ($SCRIPTNAME) into a directory of your choosing, and then runs this script to
 create an alias to allow easy launching of the tools container.
 
---disable-prompts
+-d, --disable-prompts
   Disables prompts. Prompts are always disabled when there is no controlling
   tty. Alternatively export CLOUDSDK_CORE_DISABLE_PROMPTS=1 before running
   the script.
 
---install-dir=DIRECTORY
+-i, --install-dir=DIRECTORY
   Sets the installation root directory to DIRECTORY. The launcher script will be
   installed in DIRECTORY/$TOOLS_DIR. The default location is \$HOME.
+
+-a, --alias
+  The alias name to use for running openstack command via the containerised tools
+
+-u, --url
+  The authentication URL of the OpenStack Cloud that you wish to connect to.
+
 " >&2
 
   exit 2
@@ -33,7 +40,7 @@ create an alias to allow easy launching of the tools container.
 
 parseArgs() {
   # options may be followed by one colon to indicate they have a required argument
-  if ! options=$(getopt -o di: -l disable-prompt,install-dir: -- "$@")
+  if ! options=$(getopt -o di:u:a: -l disable-prompt,install-dir:,alias:,url: -- "$@")
   then
     # something went wrong, getopt will put out an error message for us
     usage
@@ -47,6 +54,8 @@ parseArgs() {
       -d|--disable-prompts) DISABLE_PROMPTS=1 ;;
       # for options with required arguments, an additional shift is required
       -i|--install-dir) eval INSTALL_DIR="$2" ; shift;;
+      -u|--url ) URL="$2"; shift;;
+      -a|--alias ) ALIAS="$2"; shift;;
       (--) shift; break;;
       (-*) echo "$0: error - unrecognized option $1" 1>&2; usage;;
       (*) break;;
@@ -109,7 +118,20 @@ fetchScript() {
 writeConfig() {
     # write out config details
     mkdir -p $CONFIG_DIR
-    echo "install-dir : $INSTALL_DIR/$TOOLS_DIR" > $CONFIG_DIR/$CONFIG_FILE
+
+    sed -i '/${INSTALL_DIR}/d' $CONFIG_DIR/$CONFIG_FILE
+    echo "install-dir = $INSTALL_DIR/$TOOLS_DIR" > $CONFIG_DIR/$CONFIG_FILE
+
+    if [ ${ALIAS} ]; then
+      sed -i '/${ALIAS}/d' $CONFIG_DIR/$CONFIG_FILE
+      printf "alias = %s\n" ${ALIAS} >> $CONFIG_DIR/$CONFIG_FILE
+    fi
+    if [ ${URL} ]; then
+      sed -i '/${URL}/d' $CONFIG_DIR/$CONFIG_FILE
+      printf "auth-url = %s\n" ${URL} >> $CONFIG_DIR/$CONFIG_FILE
+    fi
+    # strip single quotes from variables
+    sed -i "s/'//g" $CONFIG_DIR/$CONFIG_FILE
 }
 
 install() {
@@ -125,10 +147,12 @@ in the installation directory selected below,
   DESTDIR=${INSTALL_DIR}/${TOOLS_DIR}
   if [ -e $DESTDIR ]; then
     echo "$DESTDIR already exists!"
-    promptmsg="Would you like to remove the old directory?"
+    promptmsg="Would you like to remove the old directory? If you say no it will be over-written."
     while true; do
       promptYN "$promptmsg" n removedir
-      if [ $removedir == 'y' -o $removedir == 'Y' ]; then
+      if [ $removedir == 'n' -o $removedir == 'N' ]; then
+        break
+      elif [ $removedir == 'y' -o $removedir == 'Y' ]; then
         rm -rf "$DESTDIR"
         if [ ! -e "$DESTDIR" ]; then
           break
@@ -144,6 +168,7 @@ in the installation directory selected below,
   fetchScript $SCRIPT_URL $DESTDIR/$SCRIPTNAME
   chmod u+x $DESTDIR/$SCRIPTNAME || return
 
+  # output required settings to config file, to be consumed by installer
   writeConfig
 
   # run the launcher setup script
