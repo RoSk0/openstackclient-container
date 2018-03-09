@@ -1,11 +1,16 @@
 # The OpenStackClient container installer script
 
 ## Just Give Me The Tools!
-If all you really care about is getting your hands on a working version of the container then simply run the following command from a Linux shell to have a copy installed locally.
+If all you really care about is getting your hands on a working version of the container then simply run the following install command from a Linux shell to have a copy installed locally.
+
+*OpenStackClient container install command*
+
+<a name="install-command">
 
 ```bash
-  bash -c "$(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh)"
+  bash <(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh)
 ```
+</a>
 
 ## Overview
 To provide the OpenstackClient command line tools pre-installed, with all of it's dependencies, in a docker container.
@@ -49,60 +54,51 @@ This script (__osclient-container-install.sh__) provides a means to launch a pre
 
 #### Launcher configuration
 
-The installer script currently makes use of a couple of hard coded values that users may want to
-change. The first is the alias name, which by default this is set as follows:
+The installer script currently allows the user to provide two additional parameters when being invoked. To use the parameters described below simply append them to the end of the [install command](#install-command) leaving one space after the closing parentheses as shown here.
 
-```
-ALIAS_NAME="osc"
-```
-This can either be modified by editing .bash_aliases directly or by running the following command,
-making sure to replace _myalias_ with the alias of your choice.
+The parameters support both short and long forms.
 
-```
-sed -i'.bak' 's/osc/my-alias/' ${HOME}/.bash_aliases
+```bash
+bash <(wget https://install-file-location) --parameter parameter-value
 ```
 
-Once this variable has been modified ensure that you reload the aliases file so that the new alias
-is available in your current terminal session. To do this run the following:
+###### Specifying the tool alias
+
+The first is the alias name that will be used to invoke the tool once it is installed. By default this is set to be ``osc``. In order to override this append the following parameter followed by your preferred alias name.
 
 ```
-source ${HOME}/.bash_aliases
+-a your-alias
+```
+or
+```
+--alias your-alias
 ```
 
-The second variable to be aware of is the AUTH_URL value that will connect you to your OpenStack
-cloud provider. By default this is configured to use the Catalyst Cloud authentication service.
+###### Specifying the AUTH_URL
+
+The second variable to be aware of is the AUTH_URL value that will connect you to your OpenStack cloud provider. This currently does not have  a default set and if none is provided at install time it will present a list of the current know public OpenStack providers to choose from.
+
 
 ```
-OS_AUTH_URL="https://api.cloud.catalyst.net.nz:5000/"
+-u https://an.openstack.vendor:5000
 ```
-
-As above you can either edit this value directly in in the launcher script, which by default will
-be  
-
+or
 ```
-${HOME}/openstackclient-tools/osclient-container
-```
-
-or simply run the following command, replacing your.auth-url.com:5000 with the appropriate setting
-for your cloud provider.
-
-sed -i'.bak' 's/api.cloud.catalyst.net.nz:5000/your.auth-url.com:5000/' osclient-container-install.sh
-
-```
-Note:
-At the current time this tool only supports v3 of the keystone identity service.
-
+--url https://an.openstack.vendor:5000
 ```
 
 #### Credential management
 
-If you do not wish to be prompted for your cloud credentials every time you run an openstack
-command via the alias it would pay to do one of the following. The preferred method allows you to
-your password just once as it will store it locally inn an environment variable, the alternative
-option will still require a password on each run.
+If you do not wish to be prompted for your cloud credentials every time you run an openstack command via the alias it would pay to do one of the following. The preferred method allows you to your password just once as it will store it locally inn an environment variable, the alternative option will still require a password on each run.
 
 The preferred method
 - source your *-openrc.sh file in the current terminal session prior to running any openstackclient-container commands
 
 The alternative
 - create a directory called ${HOME}/.openrcplace a copy of your *-openrc.sh file in there. The container will detect this and prompt you for your cloud account's password.
+
+```
+Note:
+At the current time this tool only supports v3 of the keystone identity service.
+
+```
