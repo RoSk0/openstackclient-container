@@ -85,10 +85,6 @@ cat << 'EOF' > ${INSTALL_DIR}/${OPENSTACK_LAUNCHER}
 # Parameters
 #------------------------------------------------------------------------------
 
-OCC_URL='https://github.com/openstack/os-client-config/archive/master.zip'
-VENDOR_FILE_PATH='os-client-config-master/os_client_config/vendors'
-TMPDIR='/tmp/oscinstall'
-TMPFILE='master.zip'
 CONFIG_FILE="$HOME/.config/openstackclient-container/cloud-container.cfg"
 OPENRCFILE="False"
 LOCALENV="False"
@@ -149,7 +145,7 @@ get_credentials() {
   if [[ ${OS_USERNAME} && ${OS_PROJECT_NAME} && ${OS_IDENTITY_API_VERSION} ]] && [[ $OS_PASSWORD || $OS_TOKEN ]]; then
     LOCALENV="True"
   # Search for OpenStack openrc files
-  elif find "${HOME}/${FILEPATH}" -name "${FILEREGEX}"; then
+  elif find "${HOME}/${FILEPATH}" -name "${FILEREGEX}" 2>/dev/null ; then
     OPENRCFILE="True"
   fi
 }
@@ -170,28 +166,6 @@ create_menu () {
   done
 }
 
-get_vendors () {
-    mkdir ${TMPDIR}
-    wget -q -O ${TMPDIR}/${TMPFILE} ${OCC_URL}
-    unzip -q ${TMPDIR}/${TMPFILE} -d ${TMPDIR}
-    arr_vendors=( $(cat ${TMPDIR}/${VENDOR_FILE_PATH}/*.json | grep '"name": ' | cut -d ':' -f2 | cut -d '"' -f2) )
-    arr_vendors+=('other')
-}
-
-get_vendor_info () {
-  if [ "$option" == "other" ]; then
-    echo "Please enter your OpenStack AUTH_URL ( in the format 'https://example.cloud.com:5000/')"
-    read OS_AUTH_URL
-  else
-    OS_AUTH_URL=$(cat ${TMPDIR}/${VENDOR_FILE_PATH}/${option}.json | grep '"auth_url": ' | cut -d '"' -f4)
-  fi
-}
-
-cleanupVendorInfo () {
-    # remove tmp dir containing
-    rm -rf ${TMPDIR}
-}
-
 getConfig() {
   if [ -e $CONFIG_FILE ];  then
     AUTH_URL=$(grep auth-url $CONFIG_FILE|awk -F "=" '{ print $2 }'| sed -e 's/^[[:space:]]//')
@@ -201,12 +175,6 @@ getConfig() {
   fi
   if [ ${AUTH_URL} ]; then
     OS_AUTH_URL=${AUTH_URL}
-  else
-    get_vendors
-    MENU_PROMPT='OpenStack provider'
-    create_menu "${#arr_vendors[@]}" "${arr_vendors[@]}"
-    get_vendor_info $option
-    cleanupVendorInfo
   fi
 }
 
