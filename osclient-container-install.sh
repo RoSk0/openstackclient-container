@@ -142,7 +142,7 @@ get_credentials() {
   # for the osc container, you need at minimum: OS_AUTH_URL, OS_USERNAME,
   # OS_IDENTITY_API_VERSION, and OS_PASSWORD/OS_TOKEN if not asking for it interactively.
 
-  if [[ ${OS_USERNAME} && ${OS_PROJECT_NAME} && ${OS_IDENTITY_API_VERSION} ]] && [[ $OS_PASSWORD || $OS_TOKEN ]]; then
+  if [[ ${OS_PROJECT_ID} && ${OS_IDENTITY_API_VERSION} && ${OS_TOKEN} ]]; then
     LOCALENV="True"
   # Search for OpenStack openrc files
   elif find "${HOME}/${FILEPATH}" -name "${FILEREGEX}" 2>/dev/null ; then
@@ -218,13 +218,11 @@ run_container(){
     -v /etc/group:/etc/group:ro \
     -v ${HOME}:/mnt \
     -w /mnt \
-    --env "OS_PASSWORD=${OS_PASSWORD}" \
     --env "OS_TOKEN=${OS_TOKEN}" \
-    --env "OS_USERNAME=${OS_USERNAME}" \
     --env "OS_AUTH_URL=${OS_AUTH_URL}" \
     --env "OS_AUTH_TYPE=${OS_AUTH_TYPE}" \
     --env "OS_REGION_NAME=${OS_REGION_NAME}" \
-    --env "OS_PROJECT_NAME=${OS_PROJECT_NAME}" \
+    --env "OS_PROJECT_ID=${OS_PROJECT_ID}" \
     --env "OS_IDENTITY_API_VERSION=${OS_IDENTITY_API_VERSION}" \
     --env "LOCALENV=True" \
     --hostname osclient-container ${EXTRAARGS} ${DOCKERIMAGE} ${*}

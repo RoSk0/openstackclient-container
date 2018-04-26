@@ -128,6 +128,9 @@ writeConfig() {
     fi
     if [ ${URL} ]; then
       sed -i '/${URL}/d' $CONFIG_DIR/$CONFIG_FILE
+      if ! echo "$URL" | grep -q "$VERSION"; then
+        URL+=$VERSION
+      fi
       printf "auth-url = %s\n" ${URL} >> $CONFIG_DIR/$CONFIG_FILE
     fi
     # strip single quotes from variables
