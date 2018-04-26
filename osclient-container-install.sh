@@ -219,6 +219,7 @@ run_container(){
     -v ${HOME}:/mnt \
     -w /mnt \
     --env "OS_TOKEN=${OS_TOKEN}" \
+    --env "OS_AUTH_TOKEN=${OS_AUTH_TOKEN}" \
     --env "OS_AUTH_URL=${OS_AUTH_URL}" \
     --env "OS_AUTH_TYPE=${OS_AUTH_TYPE}" \
     --env "OS_REGION_NAME=${OS_REGION_NAME}" \
