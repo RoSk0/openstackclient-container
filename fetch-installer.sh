@@ -4,7 +4,8 @@ DISABLE_PROMPTS=""
 INSTALL_DIR=""
 TOOLS_DIR="openstackclient-tools"
 CONFIG_DIR="$HOME/.config/openstackclient-container/"
-CONFIG_FILE="cloud-container.cfg"
+CONFIG_FILE="config"
+CREDENTIALS_FILE="credentials"
 SCRIPTNAME="osclient-container-install.sh"
 SCRIPT_URL="https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/osclient-container-install.sh"
 
@@ -117,7 +118,12 @@ fetchScript() {
 
 writeConfig() {
     # write out config details
-    mkdir -p $CONFIG_DIR
+    if [ ! -e ${CONFIG_DIR} ]; then
+	mkdir -p ${CONFIG_DIR}
+	# create empty files
+	:> ${CONFIG_DIR}${CONFIG_FILE}
+	:> ${CONFIG_DIR}${CREDENTIALS_FILE}
+    fi
 
     sed -i '/${INSTALL_DIR}/d' $CONFIG_DIR/$CONFIG_FILE
     echo "install-dir = $INSTALL_DIR/$TOOLS_DIR" > $CONFIG_DIR/$CONFIG_FILE
