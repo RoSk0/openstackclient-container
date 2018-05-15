@@ -238,6 +238,7 @@ run_container(){
     -v /etc/group:/etc/group:ro \
     -v ${HOME}:/mnt \
     -w /mnt \
+    --env "OS_AUTH_URL=${OS_AUTH_URL}" \
     --hostname osclient-container ${EXTRAARGS} ${DOCKERIMAGE} ${*}
   fi
 }
