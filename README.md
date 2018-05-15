@@ -1,5 +1,7 @@
 # The OpenStackClient container installer script
 
+Currently this tool is optimised to work with the Catalyst Cloud, feel free to take your own copy and make it work for the cloud vendor of your choice.
+
 ## Just Give Me The Tools!
 If all you really care about is getting your hands on a working version of the container then simply run the following install command from a Linux shell to have a copy installed locally.
 
@@ -8,7 +10,7 @@ If all you really care about is getting your hands on a working version of the c
 <a name="install-command">
 
 ```bash
-  bash <(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh)
+  bash <(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh) -a ccloud -u https://api.cloud.catalyst.net.nz:5000/v3
 ```
 </a>
 
@@ -24,7 +26,7 @@ Finally it adds an alias in the user's .bash_aliases file to allow them to run c
 Here is an example of the _default_ alias created by the installer script in the .bash_aliases file:
 
 ```bash
-alias osc='<install_dir>/osclient-container'
+alias ccloud='<install_dir>/osclient-container'
 ```
 A typical openstackclient commands looks something like this:
 
@@ -35,7 +37,7 @@ openstack server list
 The alias created by the script takes the place of openstack keyword in the command shown above. So in order to run a command through the openstackclient within the container the format would be like this:
 
 ```bash
-osc server list
+ccloud server list
 ```
 
 This is done in order to differentiate calls to the container versus calls to a locally installed version of the openstack client, should one exist.
@@ -51,6 +53,9 @@ This script (__osclient-container-install.sh__) provides a means to launch a pre
   - check for the existence of a valid openrc file using the naming style '*-openrc.sh', located in the directory ${HOME}/.openrc.
   - prompt the user to supply valid OpenStack cloud username and password
 - once the user is authenticated via supplied credentials it will provide a list of valid cloud projects and cloud regions for the user to select from.
+
+
+  __NOTE:__ if the user is prompted to provide their credentials these details, along with the initial choice of cloud region and cloud project, will be stored in local configuration files in plaint text.
 
 #### Launcher configuration
 
@@ -76,8 +81,7 @@ or
 
 ###### Specifying the AUTH_URL
 
-The second variable to be aware of is the AUTH_URL value that will connect you to your OpenStack cloud provider. This currently does not have  a default set and if none is provided at install time it will present a list of the current know public OpenStack providers to choose from.
-
+The second variable to be aware of is the AUTH_URL value that will connect you to your OpenStack cloud provider. This currently defaults to Catalyst Cloud if none is provided at install time.
 
 ```
 -u https://an.openstack.vendor:5000
@@ -89,13 +93,21 @@ or
 
 #### Credential management
 
-If you do not wish to be prompted for your cloud credentials every time you run an openstack command via the alias it would pay to do one of the following. The preferred method allows you to your password just once as it will store it locally inn an environment variable, the alternative option will still require a password on each run.
+If you do not wish to be prompted for your cloud credentials every time you run an openstack command via the alias it would pay to do one of the following. The preferred method allows you to your password just once as it will store it locally in an environment variable, the alternative option will still require a password on each run.
 
 The preferred method
-- source your *-openrc.sh file in the current terminal session prior to running any openstackclient-container commands
+- simply run the tool via the alias and it will interactively prompt you for your cloud credentials and then store these in configuration files located in your $HOME directory.
 
-The alternative
-- create a directory called ${HOME}/.openrcplace a copy of your *-openrc.sh file in there. The container will detect this and prompt you for your cloud account's password.
+By default these files will be
+
+```bash_aliases
+  $HOME/openstackclient-tool/config
+  $HOME/openstackclient-tool/credentials
+```
+
+The alternatives
+- source your *-openrc.sh file in the current terminal session prior to running any openstackclient-container commands
+- create a directory called ${HOME}/.openrc place a copy of your *-openrc.sh file in there. The container will detect this and prompt you for your cloud account's password.
 
 ```
 Note:
