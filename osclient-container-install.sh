@@ -17,9 +17,9 @@
 # Parameters
 #-----------------------------------------------------------------------------
 INSTALL_DIR=""
-CONFIG_FILE="$HOME/.config/openstackclient-container/cloud-container.cfg"
+CONFIG_FILE="$HOME/.config/openstackclient-container/config"
 OPENSTACK_LAUNCHER="osclient-container"
-ALIAS_NAME="osc"
+ALIAS_NAME="ccloud"
 NEWPATH=
 DOCKERLINK="https://docs.docker.com/install/"
 
