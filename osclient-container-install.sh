@@ -85,7 +85,7 @@ cat << 'EOF' > ${INSTALL_DIR}/${OPENSTACK_LAUNCHER}
 # Parameters
 #------------------------------------------------------------------------------
 
-CONFIG_FILE="$HOME/.config/openstackclient-container/config
+CONFIG_FILE="$HOME/.config/openstackclient-container/config"
 OPENRCFILE="False"
 LOCALENV="False"
 MODE="interactive"
