@@ -303,9 +303,8 @@ update_path(){
       source ${HOME}/.bashrc
     to make ${ALIAS_NAME} available from the command line.
     "
-
     echo -e  "${GREEN}${MSG}${NC}"
-  fi
+
 }
 
 #------------------------------------------------------------------------------
