@@ -153,6 +153,7 @@ in the installation directory selected below,
 
     promptWithDefault "select the installation directory" "$HOME" INSTALL_DIR
   fi
+  echo ">>>>> INSTALL_DIR = ${INSTALL_DIR}"
   DESTDIR=${INSTALL_DIR}/${TOOLS_DIR}
   if [ -e $DESTDIR ]; then
     echo "$DESTDIR already exists!"

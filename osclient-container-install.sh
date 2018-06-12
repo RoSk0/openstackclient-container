@@ -293,18 +293,15 @@ update_path(){
     NEWPATH=${INSTALL_DIR}:${PATH}
   fi
 
-  if [ ${NEWPATH} ]; then
     MSG="
-    Please run 'source ~/.bashrc' to enable changes to \$PATH
     The alias '${ALIAS}' was added to your .bashrc file.
     "
-    echo -e  "${GREEN}${MSG}${NC}"
-  fi
+    echo -e  "${WHITE}${MSG}${NC}"
 
-  if [ ! ${NEWPATH} ]; then
     MSG="
-    The alias '${ALIAS}' was added to your .bashrc file.
-    Please run 'source ${HOME}/.bashrc' to make this available.
+    Please run
+      source ${HOME}/.bashrc
+    to make ${ALIAS_NAME} available from the command line.
     "
 
     echo -e  "${GREEN}${MSG}${NC}"
