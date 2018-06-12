@@ -296,7 +296,7 @@ update_path(){
     MSG="
     The alias '${ALIAS}' was added to your .bashrc file.
     "
-    echo -e  "${WHITE}${MSG}${NC}"
+    echo -e  "${NC}${MSG}"
 
     MSG="
     Please run
