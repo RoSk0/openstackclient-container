@@ -9,8 +9,8 @@ If all you really care about is getting your hands on a working version of the c
 
 <a name="install-command">
 
-```bash
-  bash <(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh) -a ccloud -u https://api.cloud.catalyst.net.nz:5000/v3
+```
+bash <(wget -qO - https://raw.githubusercontent.com/catalyst-cloud/openstackclient-container/master/fetch-installer.sh) -a ccloud -u https://api.cloud.catalyst.net.nz:5000/v3
 ```
 </a>
 
@@ -25,18 +25,18 @@ Finally it adds an alias in the user's .bash_aliases file to allow them to run c
 #### Using The Alias
 Here is an example of the _default_ alias created by the installer script in the .bash_aliases file:
 
-```bash
+```
 alias ccloud='<install_dir>/osclient-container'
 ```
 A typical openstackclient commands looks something like this:
 
-```bash
+```
 openstack server list
 ```
 
 The alias created by the script takes the place of openstack keyword in the command shown above. So in order to run a command through the openstackclient within the container the format would be like this:
 
-```bash
+```
 ccloud server list
 ```
 
@@ -63,7 +63,7 @@ The installer script currently allows the user to provide two additional paramet
 
 The parameters support both short and long forms.
 
-```bash
+```
 bash <(wget https://install-file-location) --parameter parameter-value
 ```
 
