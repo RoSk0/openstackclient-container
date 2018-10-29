@@ -142,7 +142,7 @@ get_credentials() {
   # for the osc container, you need at minimum: OS_AUTH_URL, OS_USERNAME,
   # OS_IDENTITY_API_VERSION, and OS_PASSWORD/OS_TOKEN if not asking for it interactively.
 
-  if [[ ${OS_PROJECT_ID} && ${OS_IDENTITY_API_VERSION} && ${OS_TOKEN} ]]; then
+  if [[ ${OS_PROJECT_ID} && ${OS_TOKEN} ]] || [[ ${OS_USERNAME} && ${OS_PASSWORD} && ${OS_PROJECT_ID} ]]; then
     LOCALENV="True"
   # Search for OpenStack openrc files
   elif find "${HOME}/${FILEPATH}" -name "${FILEREGEX}" 2>/dev/null ; then
