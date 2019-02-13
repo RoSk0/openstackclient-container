@@ -183,7 +183,7 @@ run_container(){
   # check if cloud tools docker image exists, if not pull latest. If a tag is
   # provided for a specific image version then pull that version
   IMAGEID=$(docker images --filter "reference=${DOCKERIMAGE}" --format "{{.ID}}")
-  if [ ! ${IMAGEID} ]; then
+  if [ ! "${IMAGEID}" ]; then
     docker pull ${DOCKERIMAGE}:latest
   elif [ ${DOCKER_TAG} ]; then
     docker pull ${DOCKERIMAGE}:${DOCKER_TAG}
